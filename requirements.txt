@@ -1,0 +1,10 @@
+Flask==2.3.3 # Or your preferred Flask version
+python-dotenv
+cryptography
+google-auth-oauthlib
+google-api-python-client
+requests
+pywin32 # For Windows USB detection
+pyudev # For Linux USB detection (install on Linux systems if you need this)
+Werkzeug==2.3.7 # Often a dependency of Flask, better to specify if issues arise
+mysql-connector-python

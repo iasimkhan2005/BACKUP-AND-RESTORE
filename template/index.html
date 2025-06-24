@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backup & Restore App</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Background Image Styles - UPDATED TO USE LOCAL STATIC FILE */
+            background-image: url("{{ url_for('static', filename='bg.jpeg') }}"); /* Adjust 'my_bg.jpg' to your image file name */
+            background-size: cover; /* Cover the entire viewport */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Do not repeat the image */
+            background-attachment: fixed; /* Keep image fixed on scroll */
+        }
+        /* Background Overlay for readability */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+            z-index: -1; /* Place it behind the content but above the background image */
+        }
+        /* Custom styles for flashes */
+        .flash-success {
+            @apply bg-green-100 text-green-800 border border-green-400 px-4 py-3 rounded-md mb-4;
+        }
+        .flash-error {
+            @apply bg-red-100 text-red-800 border border-red-400 px-4 py-3 rounded-md mb-4;
+        }
+        .flash-info {
+            @apply bg-blue-100 text-blue-800 border border-blue-400 px-4 py-3 rounded-md mb-4;
+        }
+        /* Ensure content is above the overlay */
+        .content-container {
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md text-center content-container">
+        <h1 class="text-4xl font-bold text-gray-800 mb-6">
+            CloudBackup
+        </h1>
+
+        <!-- Flashed Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="mb-6">
+                    {% for category, message in messages %}
+                        <li class="flash-{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        {% if logged_in %}
+            <p class="text-lg text-gray-700 mb-6">
+                Welcome, <span class="font-semibold text-blue-600">{{ user }}</span>!
+            </p>
+            <div class="space-y-4">
+                <a href="{{ url_for('backup_folder_form') }}"
+                   class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-300 transform hover:scale-105">
+                    🗄️ Backup a Folder
+                </a>
+                <a href="{{ url_for('restore_form') }}"
+                   class="block w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-300 transform hover:scale-105">
+                    ⚙️ Restore Backup
+                </a>
+                <a href="{{ url_for('logout') }}"
+                   class="block w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-300 transform hover:scale-105">
+                    ➡️ Logout
+                </a>
+            </div>
+        {% else %}
+            <p class="text-lg text-gray-700 mb-6">
+                Please log in to use the backup and restore features.
+            </p>
+            <a href="{{ url_for('login') }}"
+               class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg shadow-md transition-colors duration-300 transform hover:scale-105">
+                🚀 Login with Google
+            </a>
+        {% endif %}
+    </div>
+</body>
+</html>
